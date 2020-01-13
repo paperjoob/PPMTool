@@ -1,6 +1,10 @@
 package io.seeyang.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -10,13 +14,26 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // attributes
+
+    // not blank annotation allows us to set up a message for input validation
+    @NotBlank(message = "Project name is required")
     private String projectName;
+    @NotBlank(message = "Project identifier is required")
+    // minimum 4 characters, 5 characters max for project identifier
+    @Size(min=4, max=5, message = "Please use 4 to 5 characters")
+    // cannot update the project identifier, and set it to unique for each project
+    @Column(updatable = false, unique = true)
     private String projectIdentifier; // adds custom identifier for our Project object
+    @NotBlank(message = "Project description is required")
     private String description;
+    @JsonFormat(pattern = "yyyy-mm-dd") // date format
     private Date start_date; // start date of project
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date end_date; // end date of project
 
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date created_At;
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_At; // last update made for the project
 
     // public constructor

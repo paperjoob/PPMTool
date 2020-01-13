@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/project")
 public class ProjectController {
 
-    // enable being able to make a new project
+    // inject ProjectService to enable being able to make a new project
     @Autowired
     private ProjectService projectService;
 
