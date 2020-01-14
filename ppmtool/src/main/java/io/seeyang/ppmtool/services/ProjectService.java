@@ -25,4 +25,17 @@ public class ProjectService {
         }
 
     }
+
+    // pass project id as a string and returns the projectRepositories parameter and uppercase it
+    public Project findProjectByIdentifier(String projectId) {
+
+        Project project = projectRepositories.findByProjectIdentifier(projectId.toUpperCase());
+
+        // if project is null, throw an exception
+        if(project == null) {
+            throw new ProjectIDException("Project ID '" + projectId.toUpperCase()+ "' is not found");
+        }
+
+        return project; // if a project is found, return the project
+    }
 }
