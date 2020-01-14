@@ -22,6 +22,7 @@ public class Project {
     // minimum 4 characters, 5 characters max for project identifier
     @Size(min=4, max=5, message = "Please use 4 to 5 characters")
     // cannot update the project identifier, and set it to unique for each project
+    // the @column only validates on the database side, not through the validation service
     @Column(updatable = false, unique = true)
     private String projectIdentifier; // adds custom identifier for our Project object
     @NotBlank(message = "Project description is required")
