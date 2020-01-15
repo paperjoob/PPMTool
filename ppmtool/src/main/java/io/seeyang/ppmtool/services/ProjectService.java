@@ -38,4 +38,9 @@ public class ProjectService {
 
         return project; // if a project is found, return the project
     }
+
+    // traverse through a list
+    public Iterable<Project> findAllProjects() {
+        return projectRepositories.findAll();
+    }
 }
