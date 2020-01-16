@@ -6,9 +6,9 @@ import {Link} from 'react-router-dom';
 const CreateProjectButton = () => {
     return (
         // React.Fragment = an invisible HTML wrap
-        // link the button to /addProject
+        // link the button to addproject.js
         <React.Fragment>
-            <Link to="/addProject" className="btn btn-lg btn-info">
+            <Link to="/addProject" className="btn btn-lg btn-secondary">
                 Create a Project
             </Link>
         </React.Fragment>
