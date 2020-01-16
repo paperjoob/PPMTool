@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin // needed to talk to React client
 public class ProjectController {
 
     // inject ProjectService to enable being able to make a new project

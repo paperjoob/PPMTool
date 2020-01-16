@@ -1,4 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import {connect} from "react-redux"; // connect react to the redux store
+import {createProject} from "../../actions/ProjectActions";
 
 class AddProject extends Component {
 
@@ -35,6 +38,8 @@ class AddProject extends Component {
             start_date: this.state.start_date,
             end_date: this.state.end_date
           };
+          // pass in the createProject function with two parameters: the state and the history
+        this.props.createProject(newProject, this.props.history);
         console.log(newProject);
     }
 
@@ -83,4 +88,9 @@ class AddProject extends Component {
     }
 }
 
-export default AddProject;
+AddProject.propTypes = {
+    // tell react that the createProject function is a required prop type for this component to work
+    createProject: PropTypes.func.isRequired
+}
+
+export default connect(null, {createProject}) (AddProject);
