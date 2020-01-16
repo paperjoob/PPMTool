@@ -39,8 +39,21 @@ public class ProjectService {
         return project; // if a project is found, return the project
     }
 
-    // traverse through a list
+    // traverse through the list to find all projects
     public Iterable<Project> findAllProjects() {
         return projectRepositories.findAll();
+    }
+
+    // delete project by its id
+    public void deleteProjectByIdentifier(String projectId) {
+        // assign project to have the method findByProjectIdentifier
+        Project project = projectRepositories.findByProjectIdentifier(projectId.toUpperCase());
+
+        // throw an exception if the project is empty
+        if(project == null) {
+            throw new ProjectIDException("Cannot delete project with '"+projectId.toUpperCase()+"'. This project does not exist.");
+        }
+        // delete project if not null
+        projectRepositories.delete(project);
     }
 }
