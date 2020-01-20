@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import {connect} from "react-redux"; // connect react to the redux store
 import {createProject} from "../../actions/ProjectActions";
+import classnames from "classnames";
 
 class AddProject extends Component {
 
@@ -54,10 +55,6 @@ class AddProject extends Component {
 
         return (
             <div>
-                {/* if there are errors, show these p tags */}
-                <p>{errors.projectName}</p>
-                <p>{errors.projectIdentifier}</p>
-                <p>{errors.description}</p>
                 <div className="project">
                     <div className="container">
                         <div className="row">
@@ -68,17 +65,33 @@ class AddProject extends Component {
                                     {/* project name input */}
                                     <div className="form-group">
                                         <h6>Project Name</h6>
-                                        <input type="text" onChange={this.onChange('projectName')} className="form-control form-control-lg " name="projectName" placeholder="Project Name" value={this.state.projectName} />
+                                        <input type="text" onChange={this.onChange('projectName')} 
+                                        className={classnames("form-control form-control-lg", {"is-invalid":errors.projectName} )} // the standard class is the form control, if there are errors, show the is-valid class
+                                        name="projectName" placeholder="Project Name" value={this.state.projectName} />
+                                        {/* if there are errors, show the error with the invalid-feedback bootstrap style ERROR FONT TURNS RED */}
+                                        {errors.projectName && (
+                                            <div className="invalid-feedback">{errors.projectName}</div>
+                                        )}
                                     </div>
                                     {/* project identifier input */}
                                     <div className="form-group">
                                         <h6>Project Identifier</h6>
-                                        <input type="text" onChange={this.onChange('projectIdentifier')} className="form-control form-control-lg" name="projectIdentifier" placeholder="Unique Project ID" value={this.state.projectIdentifier} />
+                                        <input type="text" onChange={this.onChange('projectIdentifier')} 
+                                        className={classnames("form-control form-control-lg", {"is-invalid":errors.projectIdentifier} )} 
+                                        name="projectIdentifier" placeholder="Unique Project ID" value={this.state.projectIdentifier} />
+                                        {errors.projectIdentifier && (
+                                            <div className="invalid-feedback">{errors.projectIdentifier}</div>
+                                        )}
                                     </div>
                                     {/* project description input */}
                                     <div className="form-group">
                                         <h6>Project Description</h6>
-                                        <textarea className="form-control form-control-lg" onChange={this.onChange('description')} name="description" placeholder="Project Description" value={this.state.description} ></textarea>
+                                        <textarea 
+                                        className={classnames("form-control form-control-lg", {"is-invalid":errors.description} )}  onChange={this.onChange('description')} 
+                                        name="description" placeholder="Project Description" value={this.state.description} ></textarea>
+                                        {errors.description && (
+                                            <div className="invalid-feedback">{errors.description}</div>
+                                        )}
                                     </div>
                                     <h6>Start Date</h6>
                                     <div className="form-group">
