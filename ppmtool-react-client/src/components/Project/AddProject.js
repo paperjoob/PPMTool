@@ -5,18 +5,23 @@ import {createProject} from "../../actions/ProjectActions";
 
 class AddProject extends Component {
 
-    // constructor() {
-    //     super()
-
-
-    // }
-
     state = {
         projectName: '',
         projectIdentifier: '',
         description: '',
         start_date: '',
-        end_date: ''
+        end_date: '',
+        errors: {} // an empty errors object since there are no errors in the initial state
+    }
+
+    // when the props receive new props
+    // takes a parameter of nextProps 
+    componentWillReceiveProps(nextProps) {
+        // if there are errors in the nextProps
+        // then we are setting the state with the errors
+        if (nextProps.errors) {
+            this.setState({errors: nextProps.errors})
+        }
     }
 
     // onChange function for input form
@@ -44,8 +49,15 @@ class AddProject extends Component {
     }
 
     render() {
+
+        const {errors} = this.state;
+
         return (
             <div>
+                {/* if there are errors, show these p tags */}
+                <p>{errors.projectName}</p>
+                <p>{errors.projectIdentifier}</p>
+                <p>{errors.description}</p>
                 <div className="project">
                     <div className="container">
                         <div className="row">
@@ -77,7 +89,7 @@ class AddProject extends Component {
                                         <input type="date" className="form-control form-control-lg" onChange={this.onChange('end_date')} name="end_date" value={this.state.end_date} />
                                     </div>
                                     {/* submit button */}
-                                    <input onClick={this.onSubmit} type="submit" className="btn btn-primary btn-block mt-4" />
+                                    <input onClick={this.onSubmit} type="submit" className="btn btn-secondary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>
@@ -90,7 +102,14 @@ class AddProject extends Component {
 
 AddProject.propTypes = {
     // tell react that the createProject function is a required prop type for this component to work
-    createProject: PropTypes.func.isRequired
+    createProject: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired // make sure the errors is an object
 }
 
-export default connect(null, {createProject}) (AddProject);
+// Instead of taking everything from state, we just want the errors information.
+// if you wanted you could write this code like this:
+const mapStateToProps = state => ({
+    errors: state.errors
+})
+
+export default connect(mapStateToProps, {createProject}) (AddProject);

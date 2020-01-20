@@ -10,7 +10,7 @@ export const createProject = (project, history) => async dispatch => {
         // if the project is posted, push the user back to the dashboard
         history.push("/dashboard");
     } catch (error) {
-        // if there is an error, the action is GET_ERRORS and send the error response data it receives from the back-end
+        // if there is an error, the action GET_ERRORS and send the error response data it receives from the back-end
         dispatch({
             type: GET_ERRORS,
             payload: error.response.data
