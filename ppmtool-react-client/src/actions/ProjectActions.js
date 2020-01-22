@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {GET_ERRORS, GET_PROJECTS} from "./Types"; // import GET_ERRORS and GET PROJECTS from Types.js
+import {GET_ERRORS, GET_PROJECTS, GET_PROJECT} from "./Types"; // import GET_ERRORS and GET PROJECTS from Types.js
 
 // it takes two parameters, the project object, and the history parameter that allows us to push a redirect
 // async means that the function always returns a PROMISE; js will wait for the promise to settle
@@ -18,6 +18,7 @@ export const createProject = (project, history) => async dispatch => {
     }
 };
 
+// GET ALL PROJECTS API CALL
 export const getProjects = () => async dispatch => {
     const res = await axios.get("http://localhost:8080/api/project/all");
     dispatch({
@@ -25,4 +26,18 @@ export const getProjects = () => async dispatch => {
         payload: res.data // the data is the response from the server
     })
 };
+
+// GET A SINGLE PROJECT BY ITS ID
+export const getProject = (id, history) => async dispatch => {
+    try {
+        const res = await axios.get(`http://localhost:8080/api/project/${id}`);
+        dispatch({
+          type: GET_PROJECT,
+          payload: res.data
+        });
+    } catch (error) {
+        // if there's an error, send them back to the dashboard
+        history.push("/dashboard");
+    }
+  };
 

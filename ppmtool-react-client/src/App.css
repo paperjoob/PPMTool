@@ -63,3 +63,12 @@ img {
 .form-control::placeholder {
   color: #bbb !important;
 }
+
+input[type=button], input[type=submit] {
+  background-color: grey;
+  border: none;
+}
+
+input[type=submit]:hover, input[type=button]:hover {
+  background-color: dimgrey;
+}

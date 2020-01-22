@@ -1,4 +1,4 @@
-import {GET_PROJECTS} from "../actions/Types"; // import GET_PROJECTS from Types.js
+import {GET_PROJECTS, GET_PROJECT} from "../actions/Types"; // import GET_PROJECTS from Types.js
 
 // create initial state
 const initialState = {
@@ -13,7 +13,13 @@ export default function(state = initialState, action) {
             return {
                 ...state, // return the state
                 projects: action.payload // return ALL projects from the server
+            };
+        case GET_PROJECT:
+            return {
+                ...state,
+                project: action.payload // return a SINGLE ELEMENT instead of all the projects
             }
+
         default: 
             return state;
     }
