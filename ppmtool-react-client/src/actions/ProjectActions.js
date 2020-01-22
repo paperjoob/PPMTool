@@ -9,12 +9,17 @@ export const createProject = (project, history) => async dispatch => {
         const res = await axios.post("http://localhost:8080/api/project/", project);
         // if the project is posted, push the user back to the dashboard
         history.push("/dashboard");
+        // clear the state if the post is successful
+        dispatch({
+            type: GET_ERRORS,
+            payload: {}
+        });
     } catch (error) {
         // if there is an error, the action GET_ERRORS and send the error response data it receives from the back-end
         dispatch({
             type: GET_ERRORS,
             payload: error.response.data
-        })
+        });
     }
 };
 

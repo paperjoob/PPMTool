@@ -61,7 +61,7 @@ class UpdateProject extends Component {
 
     // go back to the dashboard without making any changes
     handleBack = () => {
-        this.props.history.push("/dashboard")
+        this.props.history.push("/dashboard");
     }
 
     // when submitted
