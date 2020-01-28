@@ -31,8 +31,8 @@ public class Project {
     private Date start_date; // start date of project
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date end_date; // end date of project
-
     @JsonFormat(pattern = "yyyy-mm-dd")
+    @Column(updatable = false) // if a null value is passed in, it won't update the values
     private Date created_At;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_At; // last update made for the project
