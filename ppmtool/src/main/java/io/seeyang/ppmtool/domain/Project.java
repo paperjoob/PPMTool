@@ -37,6 +37,12 @@ public class Project {
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_At; // last update made for the project
 
+    // backlog - a project has ONLY ONE backlog
+    // fetch eager = project object is readily available
+    // cascade = the owning side of the relationship. EX: If I delete something downstream, it won't delete the project
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    private Backlog backlog;
+
     // public constructor
     public Project() {
 
@@ -119,4 +125,12 @@ public class Project {
         this.updated_At = new Date();
     }
 
+    // Back log getters and setters
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
 }

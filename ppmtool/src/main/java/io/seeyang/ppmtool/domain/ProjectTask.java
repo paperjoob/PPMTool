@@ -1,5 +1,7 @@
 package io.seeyang.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -18,7 +20,13 @@ public class ProjectTask {
     private String status; // status of application
     private Integer priority; // so we can group tasks by priority levels
     private Date dueDate; // due date of task
+
     // Many to One with Backlog
+    // Refresh EX: I can delete a project task that belongs to a child as a backlog object, and server will refresh the backlog
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name="backlog_id", updatable = false, nullable = false) // cannot update and cannot be empty
+    @JsonIgnore // kill the recursion
+    private Backlog backlog;
 
     @Column(updatable = false) // projectIdentifier cannot be updatable
     private String projectIdentifier; // store the identifier here to pass it in the URL onto that specific backlog
@@ -121,6 +129,15 @@ public class ProjectTask {
     @PreUpdate
     protected void onUpdate() {
         this.update_At = new Date();
+    }
+
+    // getters and setters for backlogs
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 
     // get more meaningful information when calling the objects

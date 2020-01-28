@@ -1,9 +1,10 @@
 package io.seeyang.ppmtool.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // indicates that this class is a JPA entity - represents data that can be persisted to the database
 // every instance of an entity represents a row in a table
@@ -15,7 +16,16 @@ public class Backlog {
     private String projectIdentifier; // share same identifier as the project
 
     // One to One with project - each project has one backlog and only belongs to that specific project
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="project_id", nullable = false) // cannot be null
+    @JsonIgnore // add annotation ignore - break infinite recursion
+    private Project project; // name should match the Project.java map
+
     // One to Many project tasks - a backlog can have one or more project tasks - can only belong to 1 backlog
+    // if you delete the back log, everything with the backlog will be deleted
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    // create a list called projectTasks as a new array list
+    private List<ProjectTask> projectTasks = new ArrayList<>();
 
     // no argument constructor
     public Backlog() {
@@ -49,5 +59,24 @@ public class Backlog {
     // Set Project Identifier
     public void setProjectIdentifier(String projectIdentifier) {
         this.projectIdentifier = projectIdentifier;
+    }
+
+    // project getters and setters
+    public Project getProject() {
+        return project;
+    }
+
+    // project getters and setters
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    // getter and setters
+    public List<ProjectTask> getProjectTasks() {
+        return projectTasks;
+    }
+
+    public void setProjectTasks(List<ProjectTask> projectTasks) {
+        this.projectTasks = projectTasks;
     }
 }
