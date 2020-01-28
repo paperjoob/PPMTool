@@ -1,6 +1,7 @@
 package io.seeyang.ppmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -41,6 +42,7 @@ public class Project {
     // fetch eager = project object is readily available
     // cascade = the owning side of the relationship. EX: If I delete something downstream, it won't delete the project
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonIgnore // hide the backlog information
     private Backlog backlog;
 
     // public constructor

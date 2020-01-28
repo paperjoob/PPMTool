@@ -34,4 +34,10 @@ public class BacklogController {
         // return new project task and the http status created
         return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{backlog_id}")
+    // Response Entity list type of project task
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
+        return projectTaskService.findBacklogById(backlog_id);
+    }
 }
