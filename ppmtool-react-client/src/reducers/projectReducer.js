@@ -1,4 +1,4 @@
-import {GET_PROJECTS, GET_PROJECT} from "../actions/Types"; // import GET_PROJECTS from Types.js
+import {GET_PROJECTS, GET_PROJECT, DELETE_PROJECT} from "../actions/Types"; // import GET_PROJECTS from Types.js
 
 // create initial state
 const initialState = {
@@ -18,8 +18,13 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 project: action.payload // return a SINGLE ELEMENT instead of all the projects
-            }
-
+            };
+        case DELETE_PROJECT:
+            return {
+                ...state,
+                // filter out projects that are not identitical to the project identifier and display them
+                projects: state.projects.filter(project=>project.projectIdentifier !== action.payload)
+            };
         default: 
             return state;
     }

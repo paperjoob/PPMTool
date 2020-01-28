@@ -117,12 +117,12 @@ AddProject.propTypes = {
     // tell react that the createProject function is a required prop type for this component to work
     createProject: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired // make sure the errors is an object
-}
+};
 
 // Instead of taking everything from state, we just want the errors information.
 // if you wanted you could write this code like this:
 const mapStateToProps = state => ({
     errors: state.errors
-})
+});
 
 export default connect(mapStateToProps, {createProject}) (AddProject);

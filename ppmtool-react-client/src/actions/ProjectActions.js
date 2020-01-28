@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {GET_ERRORS, GET_PROJECTS, GET_PROJECT} from "./Types"; // import GET_ERRORS and GET PROJECTS from Types.js
+import {GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT} from "./Types"; // import GET_ERRORS and GET PROJECTS from Types.js
 
 // it takes two parameters, the project object, and the history parameter that allows us to push a redirect
 // async means that the function always returns a PROMISE; js will wait for the promise to settle
@@ -45,4 +45,13 @@ export const getProject = (id, history) => async dispatch => {
         history.push("/dashboard");
     }
   };
+
+  // DELETE A PROJECT ACTION
+  export const deleteProject = (id) => async dispatch => {
+    await axios.delete(`http://localhost:8080/api/project/${id}`);
+    dispatch({
+        type: DELETE_PROJECT,
+        payload: id // pass the id of the project for the payload
+    });
+  }; // end of deleteProject
 
