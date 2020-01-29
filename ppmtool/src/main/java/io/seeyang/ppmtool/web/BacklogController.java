@@ -22,6 +22,7 @@ public class BacklogController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
+    // Post by Backlog ID
     @PostMapping("/{backlog_id}")
     public ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask,
                                                      BindingResult result, @PathVariable String backlog_id) {
@@ -35,9 +36,22 @@ public class BacklogController {
         return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
     }
 
+    // GET by Backlog ID
     @GetMapping("/{backlog_id}")
-    // Response Entity list type of project task
+    // iterable of backlog
     public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
         return projectTaskService.findBacklogById(backlog_id);
     }
+
+    // GET Project Task by ID
+    // pass the backlog id and project task id (pt_id)
+    @GetMapping("/{backlog_id}/{pt_id}")
+    // takes in two parameters
+    public ResponseEntity<?> getProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id) {
+        ProjectTask projectTask = projectTaskService.findProjectTaskByProjectSequence(backlog_id, pt_id);
+
+        // return response entity of type project task and http status of OK
+        return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+    }
+
 }

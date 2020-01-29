@@ -12,7 +12,7 @@ public class ProjectTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false) // cannot update the projectSequence and no duplicates
+    @Column(updatable = false, unique = true) // cannot update the projectSequence and no duplicates
     private String projectSequence; // projectIdentifier + 1 (Pt sequence) - used to search individual project tasks
     @NotBlank(message = "Please include a project summary.")
     private String summary;
