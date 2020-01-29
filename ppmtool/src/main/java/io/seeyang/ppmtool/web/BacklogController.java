@@ -54,4 +54,30 @@ public class BacklogController {
         return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
     }
 
+    // Updating a project task
+    // patch mapping = a composed annotation that acts as a shortcut for @RequestMapping(method = RequestMethod.POST)
+    @PatchMapping("/{backlog_id}/{pt_id}")
+    public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
+                                               @PathVariable String backlog_id, @PathVariable String pt_id) {
+        // check to see if there are any errors
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null) return errorMap; // if there are errors, return the errors
+
+        // assign updatedTask to the project task
+        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask, backlog_id, pt_id);
+
+        // pass in the updated task and http of OK
+        return new ResponseEntity<ProjectTask>(updatedTask, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{backlog_id}/{pt_id}")
+    public ResponseEntity<?> deleteProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id) {
+
+        // call the delete method from project task service and pass in the backlog and pt ids
+        projectTaskService.deletePTByProjectSequence(backlog_id, pt_id);
+
+        // return the string and status of OK
+        return new ResponseEntity<String>("Project task "+pt_id+" was deleted successfully.", HttpStatus.OK);
+    }
+
 }

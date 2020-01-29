@@ -23,7 +23,9 @@ public class Backlog {
 
     // One to Many project tasks - a backlog can have one or more project tasks - can only belong to 1 backlog
     // if you delete the back log, everything with the backlog will be deleted
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    // cascade refresh: The content of the managed object in memory is discarded (including changes, if any) and replaced by data that is retrieved from the database.
+    // orphan removal = when the child is no longer referenced by the parent, delete the child
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "backlog", orphanRemoval = true)
     // create a list called projectTasks as a new array list
     private List<ProjectTask> projectTasks = new ArrayList<>();
 

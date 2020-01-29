@@ -23,7 +23,7 @@ public class ProjectTask {
 
     // Many to One with Backlog
     // Refresh EX: I can delete a project task that belongs to a child as a backlog object, and server will refresh the backlog
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="backlog_id", updatable = false, nullable = false) // cannot update and cannot be empty
     @JsonIgnore // kill the recursion
     private Backlog backlog;
