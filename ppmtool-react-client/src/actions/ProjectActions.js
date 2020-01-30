@@ -6,7 +6,7 @@ import {GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT} from "./Types"; /
 export const createProject = (project, history) => async dispatch => {
     try {
         // create a response to post to that URL with the project object that was passed in through the addproject component
-        const res = await axios.post("http://localhost:8080/api/project/", project);
+        await axios.post("http://localhost:8080/api/project/", project);
         // if the project is posted, push the user back to the dashboard
         history.push("/dashboard");
         // clear the state if the post is successful
