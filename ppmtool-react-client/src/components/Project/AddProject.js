@@ -30,7 +30,6 @@ class AddProject extends Component {
         this.setState({
             [propertyName]: event.target.value
         });
-        console.log('In handle change', this.state)
     }
 
     // on submit, pass this information along to the server
@@ -46,7 +45,6 @@ class AddProject extends Component {
           };
           // pass in the createProject function with two parameters: the state and the history
         this.props.createProject(newProject, this.props.history);
-        console.log(newProject);
     }
 
     render() {

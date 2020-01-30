@@ -1,5 +1,5 @@
 import axios from "axios";
-import {GET_ERRORS} from "./Types";
+import {GET_ERRORS, GET_BACKLOG} from "./Types";
 
 // it takes three parameters: backlog_id, project task and the history parameter that allows us to push a redirect
 // async means that the function always returns a PROMISE; js will wait for the promise to settle
@@ -22,4 +22,21 @@ export const addProjectTask = (backlog_id, project_task, history) => async dispa
             payload: error.response.data
         });
     }
-};
+}; // end addProjectTask
+
+// get backlog by project identifier = backlog id
+export const getBacklog = (backlog_id) => async dispatch => {
+    try {
+        const res = await axios.get(`http://localhost:8080/api/backlog/${backlog_id}`)
+        dispatch({
+            type: GET_BACKLOG, // get list of project tasks, if any
+            payload: res.data
+        })
+    } catch (error) {
+        dispatch({
+            type: GET_ERRORS,
+            payload: error.response.data
+        });
+    }
+}; // end getBacklog
+
