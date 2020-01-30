@@ -1,7 +1,47 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import classnames from "classnames";
+import { addProjectTask } from "../../../actions/backlogActions";
+import PropTypes from "prop-types";
 
 class AddProjectTask extends Component {
+
+    state = {
+        summary: '',
+        acceptanceCriteria: '',
+        status: '',
+        priority: 0,
+        dueDate: '',
+        projectIdentifier: this.props.match.params.id,
+        errors: {}
+    }
+
+    // onChange function for input form
+    onChange = propertyName => (event) => {
+        this.setState({
+            [propertyName]: event.target.value
+        });
+        console.log('In handle change', this.state)
+    };
+
+    // when submitted, pass the state to the server to post
+    onSubmit = (e) => {
+        e.preventDefault();
+        // create a new object to hold the state
+        const newTask = {
+            summary: this.state.summary,
+            acceptanceCriteria: this.state.acceptanceCriteria,
+            status: this.state.status,
+            priority: this.state.priority,
+            dueDate: this.state.dueDate,
+          };
+          // pass in the createProject function with three parameters: the project identifier, the state and the history
+        this.props.addProjectTask(this.state.projectIdentifier, newTask, this.props.history);
+        console.log("ON SUBMIT", newTask);
+        console.log(this.state.projectIdentifier, "project identifier")
+    }
+
     render() {
 
         const { id } = this.props.match.params;
@@ -24,6 +64,8 @@ class AddProjectTask extends Component {
                         className="form-control form-control-lg"
                         name="summary"
                         placeholder="Project Task summary"
+                        value={this.state.summary}
+                        onChange={this.onChange('summary')} 
                       />
                     </div>
                     <div className="form-group">
@@ -31,6 +73,8 @@ class AddProjectTask extends Component {
                         className="form-control form-control-lg"
                         placeholder="Acceptance Criteria"
                         name="acceptanceCriteria"
+                        value={this.state.acceptanceCriteria}
+                        onChange={this.onChange('acceptanceCriteria')} 
                       />
                     </div>
                     <h6>Due Date</h6>
@@ -39,12 +83,16 @@ class AddProjectTask extends Component {
                         type="date"
                         className="form-control form-control-lg"
                         name="dueDate"
+                        value={this.state.dueDate}
+                        onChange={this.onChange('dueDate')} 
                       />
                     </div>
                     <div className="form-group">
                       <select
                         className="form-control form-control-lg"
                         name="priority"
+                        value={this.state.priority}
+                        onChange={this.onChange('priority')} 
                       >
                         <option value={0}>Select Priority</option>
                         <option value={1}>High</option>
@@ -57,6 +105,8 @@ class AddProjectTask extends Component {
                       <select
                         className="form-control form-control-lg"
                         name="status"
+                        value={this.state.status}
+                        onChange={this.onChange('status')} 
                       >
                         <option value="">Select Status</option>
                         <option value="TO_DO">To Do</option>
@@ -68,6 +118,7 @@ class AddProjectTask extends Component {
                     <input
                       type="submit"
                       className="btn btn-primary btn-block mt-4"
+                      onClick={this.onSubmit}
                     />
                   </form>
                 </div>
@@ -78,4 +129,15 @@ class AddProjectTask extends Component {
     }
 };
 
-export default AddProjectTask;
+AddProjectTask.propTypes = {
+    // tell react that the createProject function is a required prop type for this component to work
+    addProjectTask: PropTypes.func.isRequired, // map the state to the components propertiess
+};
+
+// // Instead of taking everything from state, we just want the projects information.
+// // if you wanted you could write this code like this:
+// const mapStateToProps = state => ({
+//     project: state.project // project reducer
+// })
+
+export default connect(null, {addProjectTask}) (AddProjectTask);
