@@ -18,11 +18,13 @@ export default function(state = initialState, action) {
                 ...state,
                 project_task: action.payload // return a SINGLE PROJECT TASK
             };
-        case DELETE_PROJECT_TASK:
-            return {
-                ...state,
-                // TO DO LATER
-            }
+            case DELETE_PROJECT_TASK:
+                return {
+                  ...state,
+                  project_tasks: state.project_tasks.filter(
+                    project_task => project_task.projectSequence !== action.payload
+                  )
+                };
         default:
             return state;
     }
