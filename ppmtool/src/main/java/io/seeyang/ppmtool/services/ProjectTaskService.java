@@ -87,7 +87,7 @@ public class ProjectTaskService {
         // make sure that our task exists
         ProjectTask projectTask = projectTaskRepository.findByProjectSequence(pt_id);
         if(projectTask == null) {
-            throw new ProjectNotFoundException("Project Task with ID: '"+pt_id+"' does not exist.");
+            throw new ProjectNotFoundException("Project Task with ID: '"+pt_id+"' not found.");
         }
 
         // make sure that the backlog/project id in the path corresponds to the RIGHT PROJECT

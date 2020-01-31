@@ -1,5 +1,6 @@
 package io.seeyang.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class ProjectTask {
     private String acceptanceCriteria; // so you can write information on what you want to accomplish
     private String status; // status of application
     private Integer priority; // so we can group tasks by priority levels
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date dueDate; // due date of task
 
     // Many to One with Backlog

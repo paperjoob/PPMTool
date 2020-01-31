@@ -48,7 +48,6 @@ export const getProjectTask = (backlog_id, pt_id, history) => async dispatch => 
           type: GET_PROJECT_TASK, // get the project task of this particular project task ID
           payload: res.data
       });
-      history.push(`/projectBoard/${backlog_id}`);
   } catch (error) {
       // if there are errors, go back to the dashboard
       history.push("/dashboard");
