@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { getProjectTask, updateProjectTask } from "../../../actions/backlogActions";
 import PropTypes from "prop-types";
+
 class UpdateProjectTask extends Component {
 
     componentDidMount() {

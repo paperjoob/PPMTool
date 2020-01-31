@@ -8,23 +8,27 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch(action.type) {
+        // grab ALL project tasks
         case GET_BACKLOG:
             return {
                 ...state,
                 project_tasks: action.payload // return ARRAY OF PROJECT TASKS
             };
+        // get an individual project task
         case GET_PROJECT_TASK:
             return {
                 ...state,
                 project_task: action.payload // return a SINGLE PROJECT TASK
             };
-            case DELETE_PROJECT_TASK:
-                return {
-                  ...state,
-                  project_tasks: state.project_tasks.filter(
-                    project_task => project_task.projectSequence !== action.payload
-                  )
-                };
+
+        // filter the selected project task in order to delete it
+        case DELETE_PROJECT_TASK:
+            return {
+                ...state,
+                project_tasks: state.project_tasks.filter(
+                project_task => project_task.projectSequence !== action.payload
+                )
+            };
         default:
             return state;
     }

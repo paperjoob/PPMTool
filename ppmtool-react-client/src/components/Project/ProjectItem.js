@@ -28,7 +28,6 @@ class ProjectItem extends Component {
               )
             }
           })
-        console.log(id)
     }
 
     render() {

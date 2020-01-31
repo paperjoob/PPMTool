@@ -1,7 +1,34 @@
 import React, { Component } from 'react';
 import {Link} from "react-router-dom";
+import { connect } from "react-redux";
+import { deleteProjectTask } from "../../../actions/backlogActions";
+import PropTypes from "prop-types";
+import Swal from 'sweetalert2';
 
 class ProjectTask extends Component {
+
+    // on delete, delete the project task and pass in the backlog id and pt_id params
+    onClickDelete = (backlog_id, pt_id) => {
+        Swal.fire({
+            title: 'Are you sure you want to delete this task?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((toDelete) => {
+            if (toDelete.value) {
+                this.props.deleteProjectTask(backlog_id, pt_id); // pass in the id of the project
+                Swal.fire(
+                    'Deleted!',
+                    'Task has been deleted.',
+                    'success'
+              )
+            }
+          })
+    }
+
     render() {
 
         // extract the project task from the props
@@ -43,11 +70,16 @@ class ProjectTask extends Component {
                     View / Update
                     </Link>
 
-                    <button className="btn btn-danger ml-4">Delete</button>
+                    <button className="btn btn-danger ml-4" onClick={()=>{this.onClickDelete(project_task.projectIdentifier, project_task.projectSequence)}} >Delete</button>
                 </div>
             </div>
         )
     }
 }; // end of ProjectTask component
 
-export default ProjectTask;
+// PropTypes
+ProjectTask.propTypes = {
+    deleteProjectTask: PropTypes.func.isRequired,
+  };
+
+export default connect(null, {deleteProjectTask}) (ProjectTask);
