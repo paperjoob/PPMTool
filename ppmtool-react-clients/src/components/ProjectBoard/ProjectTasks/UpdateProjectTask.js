@@ -1,33 +1,33 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
-import {getProjectTask, updateProjectTask} from "../../../actions/backlogActions";
+import { getProjectTask, updateProjectTask } from "../../../actions/backlogActions";
 import PropTypes from "prop-types";
 
 class UpdateProjectTask extends Component {
 
-  ComponentDidMount() {
-    // every time the component is rendered, grab the project task by its backlog id and pt_id
-    // react-router-dom, you can grab the information as props
-    const { backlog_id, pt_id } = this.props.match.params;
-    this.props.getProjectTask(backlog_id, pt_id, this.props.history);
-  }
+    componentDidMount() {
+        // every time the component is rendered, grab the project task by its backlog id and pt_id
+        // react-router-dom, you can grab the information as props
+        const { backlog_id, pt_id } = this.props.match.params;
+        this.props.getProjectTask(backlog_id, pt_id, this.props.history);
+      }
 
-state = {
-    id: "",
-    projectSequence: "",
-    summary: "",
-    acceptanceCriteria: "",
-    status: "",
-    priority: "",
-    dueDate: "",
-    projectIdentifier: "",
-    create_At: "",
-    errors: {}
-};
+    state = {
+        id: "",
+        projectSequence: "",
+        summary: "",
+        acceptanceCriteria: "",
+        status: "",
+        priority: "",
+        dueDate: "",
+        projectIdentifier: "",
+        create_At: "",
+        errors: {}
+    };
 
-componentWillReceiveProp(nextProps) {
+    componentWillReceiveProp(nextProps) {
         if (nextProps.errors) {
             this.setState({ errors: nextProps.errors });
           }
@@ -91,7 +91,7 @@ componentWillReceiveProp(nextProps) {
 
     render() {
         const { errors } = this.state;
-        console.log(this.state, "the state of")
+        
         return (
             <div className="add-PBI">
                 <div className="container">
@@ -154,7 +154,7 @@ componentWillReceiveProp(nextProps) {
                                         <option value="">Select Status</option>
                                         <option value="TO_DO">To Do</option>
                                         <option value="IN_PROGRESS">In Progress</option>
-                                        <option value="COMPLETE">Complete</option>
+                                        <option value="DONE">Complete</option>
                                     </select>
                                 </div>
 

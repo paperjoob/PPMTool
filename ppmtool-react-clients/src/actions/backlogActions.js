@@ -42,17 +42,17 @@ export const getBacklog = (backlog_id) => async dispatch => {
 
 // get project task details by its id
 export const getProjectTask = (backlog_id, pt_id, history) => async dispatch => {
-  try {
-      const res = await axios.get(`http://localhost:8080/api/backlog/${backlog_id}/${pt_id}`);
-      dispatch({
-          type: GET_PROJECT_TASK, // get the project task of this particular project task ID
-          payload: res.data
-      });
-      history.push(`/projectBoard/${backlog_id}`);
-  } catch (error) {
-      // if there are errors, go back to the dashboard
-      history.push("/dashboard");
-  }
+    try {
+        const res = await axios.get(`http://localhost:8080/api/backlog/${backlog_id}/${pt_id}`);
+        dispatch({
+            type: GET_PROJECT_TASK, // get the project task of this particular project task ID
+            payload: res.data
+        });
+        history.push(`/projectBoard/${backlog_id}`);
+    } catch (error) {
+        // if there are errors, go back to the dashboard
+        history.push("/dashboard");
+    }
 }; // end getProjectTask
 
 // Update a Project Task

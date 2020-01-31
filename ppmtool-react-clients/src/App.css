@@ -6,7 +6,7 @@ img {
   background-color: #e3f2fd;
 }
 .fa.fa-edit {
-  color: #18a2b9;
+  color: #5F9EA0;
 }
 
 .list-group-item.delete:hover {
@@ -25,7 +25,7 @@ img {
 }
 
 .fa.fa-minus-circle {
-  color: red;
+  color: #B22222;
 }
 
 .landing {
@@ -62,4 +62,13 @@ img {
 
 .form-control::placeholder {
   color: #bbb !important;
+}
+
+input[type=button], input[type=submit] {
+  background-color: grey;
+  border: none;
+}
+
+input[type=submit]:hover, input[type=button]:hover {
+  background-color: dimgrey;
 }
