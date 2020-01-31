@@ -54,9 +54,10 @@ class UpdateProjectTask extends Component {
             this.setState({
                 [propertyName]: event.target.value
             });
+            console.log("onChange", this.state)
         };
     
-        onSubmit(e) {
+        onSubmit = (e) => {
             e.preventDefault();
         
             const UpdateProjectTask = {
@@ -71,7 +72,7 @@ class UpdateProjectTask extends Component {
               create_At: this.state.create_At
             };
         
-            // console.log(UpdateProjectTask);
+            console.log("in HANDLE SUBMIT",UpdateProjectTask);
             this.props.updateProjectTask(
               this.state.projectIdentifier,
               this.state.projectSequence,
