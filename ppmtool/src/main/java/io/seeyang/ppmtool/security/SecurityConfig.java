@@ -1,12 +1,21 @@
 package io.seeyang.ppmtool.security;
 
+import io.seeyang.ppmtool.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import static io.seeyang.ppmtool.security.SecurityConstants.H2_URL;
+import static io.seeyang.ppmtool.security.SecurityConstants.SIGN_UP_URLS;
 
 @Configuration
 @EnableWebSecurity // it's to switch off the default web application security configuration and add your own.
@@ -23,6 +32,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // pass in JwtAuthenticationEntryPoint as unauthorizedHandler and throw this error if the user is not authenticated
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    // pass in custom user details service
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    // pass in bcryptencoder
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    // takes in the user details service and password encoder and helps us build the authentication manager
+    // which is used to authenticate the user when logging in
+    // making sure the user has the correct password and username to generate JWT Token
+    @Override
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    }
+
+    // make the authentication manager a Bean
+    @Override
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 
     // Cross-origin resource sharing
     @Override
@@ -48,7 +80,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll() // everything inside this, permit it all even when not logged in
-                .antMatchers("/api/users/**").permitAll() // permit everything in the users route
+                .antMatchers(SIGN_UP_URLS).permitAll() // permit everything in the users route
+                .antMatchers(H2_URL).permitAll() // permit H2
                 .anyRequest().authenticated(); // anything other than permitted, we need to be authenticated
 
     }
