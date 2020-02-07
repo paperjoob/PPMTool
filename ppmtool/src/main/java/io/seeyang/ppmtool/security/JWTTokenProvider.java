@@ -1,7 +1,6 @@
 package io.seeyang.ppmtool.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.seeyang.ppmtool.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -45,7 +44,34 @@ public class JWTTokenProvider {
     }
 
     // Validate the Token
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_JWT).parseClaimsJws(token);
+            return true; // token is valid
+        } catch(SignatureException ex) {
+            System.out.println("Invalid JSON Web Token Signature");
+        } catch (MalformedJwtException ex) {
+            System.out.println("Invalid JSON Web Token");
+        } catch (ExpiredJwtException ex) { // when the JWT is expired
+            System.out.println("Expired JSON Web Token");
+        } catch (UnsupportedJwtException ex) {
+            System.out.println("Unsupported JWT Token");
+        } catch (IllegalArgumentException ex) {
+            System.out.println("JWT claims string is empty");
+        }
+
+        // invalid token, return false
+        return false;
+    }
 
     // Get User ID from the Token
+    public Long getUserIdFromJWT(String token) {
+        // extract claims from the token
+        Claims claims = Jwts.parser().setSigningKey(SECRET_JWT).parseClaimsJws(token).getBody();
+        // grab the id
+        String id = (String)claims.get("id");
+        // parse the string into a Long
+        return Long.parseLong(id);
+    }
 
 }

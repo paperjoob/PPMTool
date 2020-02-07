@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static io.seeyang.ppmtool.security.SecurityConstants.H2_URL;
 import static io.seeyang.ppmtool.security.SecurityConstants.SIGN_UP_URLS;
@@ -40,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // pass in bcryptencoder
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {return new JwtAuthenticationFilter();}
 
     // takes in the user details service and password encoder and helps us build the authentication manager
     // which is used to authenticate the user when logging in
@@ -83,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SIGN_UP_URLS).permitAll() // permit everything in the users route
                 .antMatchers(H2_URL).permitAll() // permit H2
                 .anyRequest().authenticated(); // anything other than permitted, we need to be authenticated
+
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 

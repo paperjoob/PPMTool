@@ -18,6 +18,6 @@ public class SecurityConstants {
     // header string
     public static final String HEADER_STRING = "Authorization";
 
-    // token expiration time = 30 seconds
-    public static final long EXPIRATION_TIME = 30_000; // 30 seconds
+    // token expiration time = 60 seconds
+    public static final long EXPIRATION_TIME = 60_000; // 60 seconds
 }
