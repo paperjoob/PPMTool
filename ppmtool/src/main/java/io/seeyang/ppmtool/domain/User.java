@@ -1,12 +1,19 @@
 package io.seeyang.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Collection;
 import java.util.Date;
 
+// user details stores user information which is later encapsulated into Authentication objects.
+// This allows non-security related user information (such as email addresses, telephone numbers etc) to be stored in a convenient location.
 @Entity
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,6 +22,7 @@ public class User {
     @NotBlank(message = "Username is required")
     @Column(unique = true)
     private String username;
+
     @NotBlank(message = "Please enter your full name")
     private String fullName;
 
@@ -103,4 +111,35 @@ public class User {
         this.update_At = new Date();
     }
 
+    // USER DETAILS INTERFACE METHODS
+
+    @Override
+    @JsonIgnore // hide the overrides from the database
+    public Collection<? extends GrantedAuthority> getAuthorities() { // role based
+        return null;
+    }
+
+    @Override
+    @JsonIgnore // hide the overrides from the database
+    public boolean isAccountNonExpired() { // if you want to add additional logic like account expired for not paying
+        return true;
+    }
+
+    @Override
+    @JsonIgnore // hide the overrides from the database
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore // hide the overrides from the database
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore // hide the overrides from the database
+    public boolean isEnabled() { // account is enabled
+        return true;
+    }
 }

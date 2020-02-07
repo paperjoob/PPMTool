@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll() // everything inside this, permit it all even when not logged in
+                .antMatchers("/api/users/**").permitAll() // permit everything in the users route
                 .anyRequest().authenticated(); // anything other than permitted, we need to be authenticated
 
     }
