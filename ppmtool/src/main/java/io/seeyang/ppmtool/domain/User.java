@@ -7,8 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 // user details stores user information which is later encapsulated into Authentication objects.
 // This allows non-security related user information (such as email addresses, telephone numbers etc) to be stored in a convenient location.
@@ -36,6 +38,9 @@ public class User implements UserDetails {
     private Date update_At; // date
 
     // OneToMany with Project
+    // orphan removal = if you delete a user, delete all projects associated with user
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
 
     // no arguments constructor
     public User() {

@@ -2,9 +2,11 @@ package io.seeyang.ppmtool.services;
 
 import io.seeyang.ppmtool.domain.Backlog;
 import io.seeyang.ppmtool.domain.Project;
+import io.seeyang.ppmtool.domain.User;
 import io.seeyang.ppmtool.exceptions.ProjectIDException;
 import io.seeyang.ppmtool.repositories.BacklogRepository;
 import io.seeyang.ppmtool.repositories.ProjectRepositories;
+import io.seeyang.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,20 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // enable project to save - pass in the project object in domain
-    public Project saveOrUpdateProject(Project project) {
+    public Project saveOrUpdateProject(Project project, String username) {
         // try and catch
         try{
+
+            // find the user
+            User user = userRepository.findByUsername(username);
+            project.setProjectLeader(user.getUsername());
+            // set the user to the project
+            project.setUser(user);
+
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
             // if the project id is empty, create a new backlog

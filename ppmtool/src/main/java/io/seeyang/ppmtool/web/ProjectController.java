@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/project")
@@ -31,14 +32,16 @@ public class ProjectController {
 
     // @VALID is used to make sure we are passing a valid request
     // binding result is an interface that invokes the validator on an object - determines if there are errors
+    // PRINCIPAL = comes from security package - the owner of the token (user) fetches the user by grabbing the ID from the claims
     @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result, Principal principal) {
         // if the result has an error, return the list of errors below
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if (errorMap!=null) return errorMap; // if errorMap is not null, return the errorMap
 
         // call the project service method to save or update the passed project
-       project = projectService.saveOrUpdateProject(project);
+        // set the relationship between the project and the user
+       project = projectService.saveOrUpdateProject(project, principal.getName());
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
 
