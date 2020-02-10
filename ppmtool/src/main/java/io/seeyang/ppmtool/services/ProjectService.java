@@ -4,6 +4,7 @@ import io.seeyang.ppmtool.domain.Backlog;
 import io.seeyang.ppmtool.domain.Project;
 import io.seeyang.ppmtool.domain.User;
 import io.seeyang.ppmtool.exceptions.ProjectIDException;
+import io.seeyang.ppmtool.exceptions.ProjectNotFoundException;
 import io.seeyang.ppmtool.repositories.BacklogRepository;
 import io.seeyang.ppmtool.repositories.ProjectRepositories;
 import io.seeyang.ppmtool.repositories.UserRepository;
@@ -60,7 +61,7 @@ public class ProjectService {
     }
 
     // pass project id as a string and returns the projectRepositories parameter and uppercase it
-    public Project findProjectByIdentifier(String projectId) {
+    public Project findProjectByIdentifier(String projectId, String username) {
 
         Project project = projectRepositories.findByProjectIdentifier(projectId.toUpperCase());
 
@@ -69,24 +70,31 @@ public class ProjectService {
             throw new ProjectIDException("Project ID '" + projectId.toUpperCase()+ "' is not found");
         }
 
+        // if the project leader does not equal the username string, throw an error
+        if (!project.getProjectLeader().equals(username)) {
+            throw new ProjectNotFoundException("Project not found in your account.");
+        }
+
         return project; // if a project is found, return the project
     }
 
-    // traverse through the list to find all projects
-    public Iterable<Project> findAllProjects() {
-        return projectRepositories.findAll();
+    // traverse through the list to find all projects by username
+    public Iterable<Project> findAllProjects(String username) {
+        // run this method to find the project by its project leader
+        return projectRepositories.findAllByProjectLeader(username);
     }
 
     // delete project by its id
-    public void deleteProjectByIdentifier(String projectId) {
-        // assign project to have the method findByProjectIdentifier
-        Project project = projectRepositories.findByProjectIdentifier(projectId.toUpperCase());
-
-        // throw an exception if the project is empty
-        if(project == null) {
-            throw new ProjectIDException("Cannot delete project with '"+projectId.toUpperCase()+"'. This project does not exist.");
-        }
-        // delete project if not null
-        projectRepositories.delete(project);
+    public void deleteProjectByIdentifier(String projectId, String username) {
+//        // assign project to have the method findByProjectIdentifier
+//        Project project = projectRepositories.findByProjectIdentifier(projectId.toUpperCase());
+//
+//        // throw an exception if the project is empty
+//        if(project == null) {
+//            throw new ProjectIDException("Cannot delete project with '"+projectId.toUpperCase()+"'. This project does not exist.");
+//        }
+        // find the project id and username.
+        // if it all matches, delete the project
+        projectRepositories.delete(findProjectByIdentifier(projectId, username));
     }
 }
