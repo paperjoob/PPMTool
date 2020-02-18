@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/backlog")
@@ -25,12 +26,13 @@ public class BacklogController {
     // Post by Backlog ID
     @PostMapping("/{backlog_id}")
     public ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask,
-                                                     BindingResult result, @PathVariable String backlog_id) {
+                                                     BindingResult result, @PathVariable String backlog_id,
+                                                     Principal principal) {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null) return errorMap; // if there are errors, return the errors
 
-        // new project task that takes the backlog id and project task
-        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask);
+        // new project task that takes the backlog id and project task along with the username
+        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask, principal.getName());
 
         // return new project task and the http status created
         return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
@@ -39,8 +41,9 @@ public class BacklogController {
     // GET by Backlog ID
     @GetMapping("/{backlog_id}")
     // iterable of backlog
-    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
-        return projectTaskService.findBacklogById(backlog_id);
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id, Principal principal) {
+        // return the backlog id by its id and return the username
+        return projectTaskService.findBacklogById(backlog_id, principal.getName());
     }
 
     // GET Project Task by ID

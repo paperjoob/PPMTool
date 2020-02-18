@@ -1,7 +1,6 @@
 package io.seeyang.ppmtool.services;
 
 import io.seeyang.ppmtool.domain.Backlog;
-import io.seeyang.ppmtool.domain.Project;
 import io.seeyang.ppmtool.domain.ProjectTask;
 import io.seeyang.ppmtool.exceptions.ProjectNotFoundException;
 import io.seeyang.ppmtool.repositories.BacklogRepository;
@@ -22,13 +21,16 @@ public class ProjectTaskService {
     @Autowired
     private ProjectRepositories projectRepositories;
 
+    @Autowired
+    private ProjectService projectService;
+
     // a method that returns a projectTask called addProjectTask
     // takes two parameters: project identifier and project task
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
+    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
 
-        try {
             // I want Project Tasks to be added to a specific project, make sure project != null = Backlog exists
-            Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+            // find the project by its identifier and username by the project
+            Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog(); //backlogRepository.findByProjectIdentifier(projectIdentifier);
 
             // Set the backlog to the project task which sets the relationship
             projectTask.setBacklog(backlog);
@@ -42,8 +44,8 @@ public class ProjectTaskService {
             projectTask.setProjectSequence(projectIdentifier+"-"+BackLogSequence); // EX: IDPRO-3
             projectTask.setProjectIdentifier(projectIdentifier); // set project identifier
 
-            // Set initial priority, if null
-            if(projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
+            // Check if priority is null, if it is, Set initial priority to 3
+            if(projectTask.getPriority() == null || projectTask.getPriority() == 0) {
                 projectTask.setPriority(3); // if there are no priorities set, default it to a 3 - LOW PRIORITY
             }
 
@@ -54,24 +56,17 @@ public class ProjectTaskService {
 
             // return a saved project task
             return projectTaskRepository.save(projectTask);
-        } catch (Exception e) { // if the TRY fails, run this catch
-            throw new ProjectNotFoundException("Project not found.");
-        }
 
     }
 
     // create a method to return the list by id
-    public Iterable<ProjectTask> findBacklogById(String id) {
+    public Iterable<ProjectTask> findBacklogById(String id, String username) {
 
         // check if Project exists
-        Project project = projectRepositories.findByProjectIdentifier(id);
+        // make sure the username and id matches the project
+        projectService.findProjectByIdentifier(id, username);
 
-        // if project is null, throw this exception
-        if(project == null) {
-            throw new ProjectNotFoundException("Project with ID: '"+id+"' does not exist.");
-        }
-
-        // if project is not null, return the id
+        // if the projectservice does not throw an exception, return the backlog by its id
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
     }
 
