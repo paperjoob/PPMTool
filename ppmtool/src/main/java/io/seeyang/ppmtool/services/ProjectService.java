@@ -26,6 +26,24 @@ public class ProjectService {
 
     // enable project to save - pass in the project object in domain
     public Project saveOrUpdateProject(Project project, String username) {
+
+
+        // WHEN UPDATING
+        // if the project id is not null, find the project by its identifier
+        // we only want the user who owns that particular (if found) to be able to update the project
+        if (project.getId() != null) {
+            Project existingProject = projectRepositories.findByProjectIdentifier(project.getProjectIdentifier());
+
+            // if the existing project is not null and the username isn't equal to the existing project's owner,
+            // throw an exception
+            if (existingProject != null && (!existingProject.getProjectLeader().equals(username))) {
+                throw new ProjectNotFoundException("Project not found in your account.");
+            } else if (existingProject == null) {
+                // if the project is empty or not found, show this error - user will have to create a new project if the project id doesn't match
+                throw new ProjectNotFoundException("Project with ID: '"+project.getProjectIdentifier()+"' cannot be updated because it does not exist.");
+            }
+        }
+
         // try and catch
         try{
 
