@@ -1,0 +1,94 @@
+import React, { Component } from 'react';
+import {createNewUser} from "../../actions/securityActions";
+import PropTypes from "prop-types";
+import {connect} from "react-redux"; // connect react to the redux store
+import classnames from "classnames";
+
+class Register extends Component {
+
+    state = {
+        username: "",
+        fullName: "",
+        password: "",
+        confirmPassword: "",
+        errors: {} // an empty errors object since there are no errors in the initial state
+    }
+
+    // onChange function for input form
+    onChange = propertyName => (event) => {
+        this.setState({
+            [propertyName]: event.target.value
+        });
+        console.log(this.state)
+    };
+
+    // on submit, pass this information along to the server
+    onSubmit = (e) => {
+        e.preventDefault();
+        // create a new object to hold the state
+        const newUser = {
+            username: this.state.username,
+            fullName: this.state.fullName,
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword
+          };
+          // pass in the createProject function with two parameters: the state and the history
+          this.props.createNewUser(newUser, this.props.history);
+    };
+
+    render() {
+        return (
+            <div className="register">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-8 m-auto">
+                            <h1 className="display-4 text-center">Sign Up</h1>
+                            <p className="lead text-center">Create your Account</p>
+                            <form >
+                                <div className="form-group">
+                                    <input type="text" className="form-control form-control-lg" placeholder="Name" name="fullName"
+                                        value={this.state.fullName}
+                                        onChange={this.onChange('fullName')}
+                                        />
+                                </div>
+                                <div className="form-group">
+                                    <input type="email" className="form-control form-control-lg" placeholder="Email Address (Username)" name="username" 
+                                        value={this.state.username}
+                                        onChange={this.onChange('username')}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <input type="password" className="form-control form-control-lg" placeholder="Password" name="password" 
+                                        value={this.state.password}
+                                        onChange={this.onChange('password')}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <input type="password" className="form-control form-control-lg" placeholder="Confirm Password"
+                                        value={this.state.confirmPassword}
+                                        name="confirmPassword" 
+                                        onChange={this.onChange('confirmPassword')}
+                                    />
+                                </div>
+                                <input onClick={this.onSubmit} type="submit" className="btn btn-secondary btn-block mt-4" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+Register.propTypes = {
+    createNewUser: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired
+  };
+
+// Instead of taking everything from state, we just want the errors information.
+// if you wanted you could write this code like this:
+const mapStateToProps = state => ({
+    errors: state.errors
+});
+
+export default connect(mapStateToProps, { createNewUser }) (Register);

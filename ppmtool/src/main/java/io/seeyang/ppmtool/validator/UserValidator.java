@@ -24,9 +24,9 @@ public class UserValidator implements Validator {
         User user = (User) object;
 
         // throw an error if the password is less OR 6 and greater than 24
-        if (user.getPassword().length() < 6 || user.getPassword().length() > 24) {
+        if (user.getPassword().length() < 6) {
             // attribute password and forcing the length to be greater than 6
-            errors.rejectValue("password", "Length", "Password must be at least 6 and less than 24 characters");
+            errors.rejectValue("password", "Length", "Password must be at least 6");
         }
 
         // if the user password does not MATCh the confirmPassword field, throw the error
