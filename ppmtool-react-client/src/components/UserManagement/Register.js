@@ -14,6 +14,16 @@ class Register extends Component {
         errors: {} // an empty errors object since there are no errors in the initial state
     }
 
+    // when the props receive new props
+    // takes a parameter of nextProps 
+    componentWillReceiveProps(nextProps) {
+        // if there are errors in the nextProps
+        // then we are setting the state with the errors
+        if (nextProps.errors) {
+            this.setState({errors: nextProps.errors})
+        }
+    }
+
     // onChange function for input form
     onChange = propertyName => (event) => {
         this.setState({
@@ -37,6 +47,9 @@ class Register extends Component {
     };
 
     render() {
+
+        const {errors} = this.state;
+
         return (
             <div className="register">
                 <div className="container">
@@ -46,29 +59,45 @@ class Register extends Component {
                             <p className="lead text-center">Create your Account</p>
                             <form >
                                 <div className="form-group">
-                                    <input type="text" className="form-control form-control-lg" placeholder="Name" name="fullName"
+                                    <input type="text" className={classnames("form-control form-control-lg", {"is-invalid":errors.fullName} )}  placeholder="Name" name="fullName"
                                         value={this.state.fullName}
                                         onChange={this.onChange('fullName')}
                                         />
+                                    {/* if there are errors, show the error with the invalid-feedback bootstrap style ERROR FONT TURNS RED */}
+                                    {errors.fullName && (
+                                        <div className="invalid-feedback">{errors.fullName}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
-                                    <input type="email" className="form-control form-control-lg" placeholder="Email Address (Username)" name="username" 
+                                    <input type="email" className={classnames("form-control form-control-lg", {"is-invalid":errors.username} )}  placeholder="Email Address (Username)" name="username" 
                                         value={this.state.username}
                                         onChange={this.onChange('username')}
                                     />
+                                    {/* if there are errors, show the error with the invalid-feedback bootstrap style ERROR FONT TURNS RED */}
+                                    {errors.username && (
+                                        <div className="invalid-feedback">{errors.username}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" className="form-control form-control-lg" placeholder="Password" name="password" 
+                                    <input type="password" className={classnames("form-control form-control-lg", {"is-invalid":errors.password} )}  placeholder="Password" name="password" 
                                         value={this.state.password}
                                         onChange={this.onChange('password')}
                                     />
+                                    {/* if there are errors, show the error with the invalid-feedback bootstrap style ERROR FONT TURNS RED */}
+                                    {errors.password && (
+                                        <div className="invalid-feedback">{errors.password}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" className="form-control form-control-lg" placeholder="Confirm Password"
+                                    <input type="password" className={classnames("form-control form-control-lg", {"is-invalid":errors.confirmPassword} )}  placeholder="Confirm Password"
                                         value={this.state.confirmPassword}
                                         name="confirmPassword" 
                                         onChange={this.onChange('confirmPassword')}
                                     />
+                                    {/* if there are errors, show the error with the invalid-feedback bootstrap style ERROR FONT TURNS RED */}
+                                    {errors.confirmPassword && (
+                                        <div className="invalid-feedback">{errors.confirmPassword}</div>
+                                    )}
                                 </div>
                                 <input onClick={this.onSubmit} type="submit" className="btn btn-secondary btn-block mt-4" />
                             </form>
