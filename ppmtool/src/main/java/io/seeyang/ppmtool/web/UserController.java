@@ -51,7 +51,7 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if (errorMap != null) return errorMap;
 
-        // To authenticate the user, pass in the usernamd and password
+        // To authenticate the user, pass in the username and password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(), // from the JWTTokenProvider.java
