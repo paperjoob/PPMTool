@@ -29,7 +29,6 @@ class Register extends Component {
         this.setState({
             [propertyName]: event.target.value
         });
-        console.log(this.state)
     };
 
     // on submit, pass this information along to the server
@@ -43,7 +42,7 @@ class Register extends Component {
             confirmPassword: this.state.confirmPassword
           };
           // pass in the createProject function with two parameters: the state and the history
-          this.props.createNewUser(newUser, this.props.history);
+        this.props.createNewUser(newUser, this.props.history);
     };
 
     render() {
