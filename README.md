@@ -13,3 +13,5 @@ Other tools used are:
 Spring Security, JSON Web Token (tokens that are used to authenticate users on applications - applications that use JWTS no longer have to hold cookies or other session data about their users), Redux, Sweet Alerts 2.
 
 For more information on Spring Security, check out this link: https://spring.io/guides/topicals/spring-security-architecture/
+
+View the live application here: https://project-management-tool-react.herokuapp.com/
