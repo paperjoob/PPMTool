@@ -12,6 +12,13 @@ class Login extends Component {
         errors: {}
     }
 
+    // if you are logged in, get pushed to the dashboard
+    componentDidMount() {
+        if(this.props.security.validToken) {
+            this.props.history.push("/dashboard");
+        }
+    }
+
     // when the props receive new props
     // takes a parameter of nextProps 
     componentWillReceiveProps(nextProps) {
@@ -19,6 +26,10 @@ class Login extends Component {
         // then we are setting the state with the errors
         if (nextProps.errors) {
             this.setState({errors: nextProps.errors})
+        }
+        // if there's a valid token, push the user to the dashboard
+        if (nextProps.security.validToken) {
+            this.props.history.push("/dashboard")
         }
     }
 
@@ -84,13 +95,15 @@ class Login extends Component {
 
 Login.propTypes = {
     login: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    security: PropTypes.object.isRequired
   };
 
 // Instead of taking everything from state, we just want the errors information.
 // if you wanted you could write this code like this:
 const mapStateToProps = state => ({
-    errors: state.errors
+    errors: state.errors,
+    security: state.security
 });
 
 export default connect(mapStateToProps, { login })  (Login);

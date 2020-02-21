@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
 import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class Landing extends Component {
+
+    // if you are logged in, get pushed to the dashboard when clicking on the Project Management Tool Header Name
+    componentDidMount() {
+        if(this.props.security.validToken) {
+            this.props.history.push("/dashboard");
+        }
+    };
+
     render() {
         return (
             <div className="landing">
@@ -27,6 +37,16 @@ class Landing extends Component {
             </div>
         )
     }
-}
+};
 
-export default Landing;
+Landing.propTypes = {
+    security: PropTypes.object.isRequired
+  };
+
+// Instead of taking everything from state, we just want the security information.
+// if you wanted you could write this code like this:
+const mapStateToProps = state => ({
+    security: state.security
+});
+
+export default connect(mapStateToProps) (Landing);

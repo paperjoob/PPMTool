@@ -1,8 +1,73 @@
 import React, { Component } from 'react'
 import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { logout } from "../../actions/securityActions";
 
 class Header extends Component {
+
+    logout = () => {
+        this.props.logout();
+        window.location.href="/";
+    };
+
     render() {
+        // extract validtoken and user from security reducer
+        const {validToken, user} = this.props.security;
+
+        // user will see this if not logged in
+        const userIsNotAuthenticated =  (
+            <div className="collapse navbar-collapse" id="mobile-nav">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/register">
+                        Register
+                    </Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                        Login
+                    </Link>
+                </li>
+            </ul>
+        </div>
+        );
+
+        // user sees this on the navigation bar if logged in
+        const userIsAuthenticated =  (
+            <div className="collapse navbar-collapse" id="mobile-nav">
+            <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
+                        Dashboard
+                    </Link>
+                </li>
+            </ul>
+
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
+                        <i className="fas fa-user-circle mr-1" />
+                        {user.fullName}
+                    </Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/logout" onClick={this.logout}>
+                        Logout
+                    </Link>
+                </li>
+            </ul>
+        </div>
+        );
+
+        let headerLinks;
+
+        if(validToken && user) {
+            headerLinks = userIsAuthenticated;
+        } else {
+            headerLinks = userIsNotAuthenticated;
+        }
+
         return (
             // Nav Bar
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
@@ -10,36 +75,25 @@ class Header extends Component {
                     <Link className="navbar-brand" to="/">
                         Personal Project Management Tool
                     </Link>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon" />
                     </button>
-        
-                    <div className="collapse navbar-collapse" id="mobile-nav">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/dashboard">
-                                    Dashboard
-                                </Link>
-                            </li>
-                        </ul>
-        
-                        <ul className="navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/register">
-                                    Sign Up
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/login">
-                                    Login
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+                    {headerLinks}
                 </div>
             </nav>
         )
     }
-}
+};
 
-export default Header;
+Header.propTypes = {
+    logout: PropTypes.func.isRequired,
+    security: PropTypes.object.isRequired
+  };
+
+// Instead of taking everything from state, we just want the security information.
+// if you wanted you could write this code like this:
+const mapStateToProps = state => ({
+    security: state.security
+});
+
+export default connect(mapStateToProps, {logout}) (Header);

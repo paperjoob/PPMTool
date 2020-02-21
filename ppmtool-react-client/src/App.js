@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Header from "./components/Layout/Header";
 import AddProject from "./components/Project/AddProject";
@@ -13,6 +13,34 @@ import UpdateProjectTask from "./components/ProjectBoard/ProjectTasks/UpdateProj
 import Landing from "./components/Layout/Landing";
 import Register from "./components/UserManagement/Register";
 import Login from "./components/UserManagement/Login";
+import jwt_decode from "jwt-decode";
+import setJwtToken from "./securityUtils/setJwtToken";
+import { SET_CURRENT_USER } from "./actions/Types";
+import {logout} from "./actions/securityActions";
+import SecureRoute from "./securityUtils/SecureRoute";
+
+// extract the jwtToken from the localStorage
+const jwtToken = localStorage.jwtToken;
+
+// if we have a token, set the token in the Authorization header, 
+// so that React keeps the user logged in during the session when refreshing the page (keeps the user logged in the state)
+if (jwtToken) {
+  setJwtToken(jwtToken)
+  const decoded_jwtToken = jwt_decode(jwtToken);
+  store.dispatch({
+      type: SET_CURRENT_USER,
+      payload: decoded_jwtToken
+  });
+
+  const currentTime = Date.now()/1000;
+  // if the decoded token's expiration time is less than the current time, then it is expired
+  if(decoded_jwtToken.exp < currentTime) {
+    // handle logout for user - call the log out function
+    store.dispatch(logout());
+    // send the user back to the main site
+    window.location.href="/";
+  }
+};
 
 class App extends Component {
   render() {
@@ -28,16 +56,17 @@ class App extends Component {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
 
-          {/* Private Routes */}
-
-          <Route exact path="/dashboard" component={Dashboard}/>
-          <Route exact path="/addProject" component={AddProject}/>
+          {/* Private Routes wrapped in Switch */}
+          <Switch>
+          <SecureRoute exact path="/dashboard" component={Dashboard}/>
+          <SecureRoute exact path="/addProject" component={AddProject}/>
           {/* the update project takes a parameter of ID */}
-          <Route exact path ="/updateProject/:id" component={UpdateProject}/>
-          <Route exact path="/projectBoard/:id" component={ProjectBoard} />
-          <Route exact path="/addProjectTask/:id" component={AddProjectTask} />
+          <SecureRoute exact path ="/updateProject/:id" component={UpdateProject}/>
+          <SecureRoute exact path="/projectBoard/:id" component={ProjectBoard} />
+          <SecureRoute exact path="/addProjectTask/:id" component={AddProjectTask} />
           {/* pass in the backlog_id and pt_id from the server in order to update a project task */}
-          <Route exact path="/updateProjectTask/:backlog_id/:pt_id" component={UpdateProjectTask} />
+          <SecureRoute exact path="/updateProjectTask/:backlog_id/:pt_id" component={UpdateProjectTask} />
+          </Switch>
         </div>
       </Router>
     </Provider>

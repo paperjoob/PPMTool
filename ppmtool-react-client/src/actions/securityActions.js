@@ -47,3 +47,14 @@ export const login = (LoginRequest) => async dispatch => {
         })
     }
 }; // end login
+
+// log user out
+export const logout = () => dispatch => {
+    localStorage.removeItem("jwtToken");
+    setJwtToken(false);
+    // set the user to empty and set the validToken to false
+    dispatch({
+        type: SET_CURRENT_USER,
+        payload: {}
+    })
+}; // end log out
